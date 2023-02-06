@@ -75,6 +75,15 @@ def receipt_item():
     db.session.commit()
     return jsonify(receipt_item.to_dict()), 201
 
+@app.patch('update_receipt_item')
+def update_item():
+    data = request.json
+    rec_item = Receipt_Item.query.get(id)
+    for key, value in data.items():
+        setattr(rec_item, key, value)
+    db.session.commit()
+    return jsonify(rec_item.to_dict()), 202
+
 #cocktail routes#
 
 @app.get('/cocktails')
