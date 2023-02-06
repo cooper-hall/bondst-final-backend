@@ -59,6 +59,9 @@ class Receipt_Item(db.Model):
             'name': self.name,
             'ticket_id': self.ticket_id
         }
+
+    def ticket(self):
+        return Ticket.query.get(self.ticket_id)
     
     def __repr__(self):
         return 'Receipt_Item %r' % self.name
