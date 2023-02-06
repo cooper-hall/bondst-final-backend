@@ -102,10 +102,10 @@ def cocktails():
 
 #bottle routes#
 
-# @app.get('/bottles')
-# def bottles():
-#     bottles = Bottle.query.all()
-#     return jsonify([bottle.to_dict() for bottle in bottles])
+@app.get('/bottles')
+def bottles():
+    bottles = Bottle.query.all()
+    return jsonify([bottle.to_dict() for bottle in bottles])
 
 
 # @app.post('/add_item_to_ticket')
