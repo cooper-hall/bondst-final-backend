@@ -58,6 +58,15 @@ def update_ticket(id):
     db.session.commit()
     return jsonify(ticket.to_dict()), 202
 
+@app.delete('/delete_ticket/<int:id>')
+def delete_ticket(id):
+    ticket = Ticket.query.get(id)
+    if ticket:
+        db.session.delete(ticket)
+        db.session.commit()
+        return jsonify(ticket.to_dict), 200
+    else:
+        return {'error': 'No ticket found'}, 404
 #receipt item routes#
 
 @app.delete('/receipt_items/<int:id>')
