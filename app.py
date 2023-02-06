@@ -30,6 +30,13 @@ def home():
 def example():
     return {'message': 'Your app is running python'}
 
+#ticket routes#
+
+@app.get('/tickets')
+def tickets():
+    tickets = Ticket.query.all()
+    return jsonify([ticket.to_dict() for ticket in tickets])
+
 @app.post('/ticket')
 def ticket():
     data = request.json 
@@ -42,15 +49,45 @@ def ticket():
         db.session.commit()
     return jsonify([i.to_dict() for i in ticket.receipt_items()]), 201
 
-@app.get('/tickets')
-def tickets():
-    tickets = Ticket.query.all()
-    return jsonify([tickets.to_dict() for ticket in tickets])
+@app.patch('/update_ticket')
+def update_ticket():
+    data = request.json
+    ticket = Ticket.query.get(id)
+    for key, value in data.items():
+        setattr(ticket, key, value)
+    db.session.commit()
+    return jsonify(ticket.to_dict()), 202
+
+#receipt item routes#
+
+@app.delete('/receipt_items/<int: id >')
+def delete_receipt_item():
+    item = Receipt_Item.query.get(id)
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify(item), 200
+
+@app.post('/create_receipt_item')
+def receipt_item():
+    data = request.json
+    receipt_item = Receipt_Item(data['price'], data['ounces'], data['name'], data['ticket_id'])
+    db.session.add(receipt_item)
+    db.session.commit()
+    return jsonify(receipt_item.to_dict()), 201
+
+#cocktail routes#
 
 @app.get('/cocktails')
 def cocktails():
     cocktails = Drink.query.all()
     return jsonify([cocktail.to_dict() for cocktail in cocktails])
+
+#bottle routes#
+
+@app.get('/bottles')
+def bottles():
+    bottles = Bottle.query.all()
+    return jsonify([bottle.to_dict() for bottle in bottles])
 
 
 # @app.post('/add_item_to_ticket')
@@ -63,15 +100,6 @@ def cocktails():
 #     # return the created item as json to the client
 #     # on the client, update the UI/state, etc
 #     pass
-
-@app.post('/create_receipt_item')
-def receipt_item():
-    data = request.json
-    receipt_item = Receipt_Item(data['price'], data['ounces'], data['name'], data['ticket_id'])
-    db.session.add(receipt_item)
-    db.session.commit()
-    return jsonify(receipt_item.to_dict()), 201
-
 
 
 # @socketio.on('connect')
