@@ -49,8 +49,8 @@ def ticket():
         db.session.commit()
     return jsonify([i.to_dict() for i in ticket.receipt_items()]), 201
 
-@app.patch('/update_ticket')
-def update_ticket():
+@app.patch('/update_ticket/<int:id>')
+def update_ticket(id):
     data = request.json
     ticket = Ticket.query.get(id)
     for key, value in data.items():
@@ -60,8 +60,8 @@ def update_ticket():
 
 #receipt item routes#
 
-@app.delete('/receipt_items/<int: id >')
-def delete_receipt_item():
+@app.delete('/receipt_items/<int:id>')
+def delete_receipt_item(id):
     item = Receipt_Item.query.get(id)
     db.session.delete(item)
     db.session.commit()
@@ -75,7 +75,7 @@ def receipt_item():
     db.session.commit()
     return jsonify(receipt_item.to_dict()), 201
 
-@app.patch('update_receipt_item')
+@app.patch('/update_receipt_item')
 def update_item():
     data = request.json
     rec_item = Receipt_Item.query.get(id)
@@ -93,10 +93,10 @@ def cocktails():
 
 #bottle routes#
 
-@app.get('/bottles')
-def bottles():
-    bottles = Bottle.query.all()
-    return jsonify([bottle.to_dict() for bottle in bottles])
+# @app.get('/bottles')
+# def bottles():
+#     bottles = Bottle.query.all()
+#     return jsonify([bottle.to_dict() for bottle in bottles])
 
 
 # @app.post('/add_item_to_ticket')

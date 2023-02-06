@@ -28,7 +28,7 @@ class Ticket(db.Model):
            }
     
     def receipt_items(self):
-        return Receipt_Item.query.filter_by(order_id = self.id)
+        return Receipt_Item.query.filter_by(ticket_id = self.id)
      
     def __repr__(self):
         return 'Tickets %r' % self.sum
@@ -45,11 +45,10 @@ class Receipt_Item(db.Model):
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, price, ounces, name, ticket_id):
-        self.price = price
-        self.ounces = ounces
-        self.name = name
+    def __init__(self, ticket_id, name, price) :
         self.ticket_id = ticket_id
+        self.name = name
+        self.price = price
 
     def to_dict(self):
         return {
