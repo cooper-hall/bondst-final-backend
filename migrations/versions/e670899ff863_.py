@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: e2646b3136e3
+Revision ID: e670899ff863
 Revises: 
-Create Date: 2023-02-06 10:46:43.491332
+Create Date: 2023-02-07 14:21:47.437976
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e2646b3136e3'
+revision = 'e670899ff863'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,8 +21,8 @@ def upgrade():
     op.create_table('bottle',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
-    sa.Column('ounces', sa.String(), nullable=True),
-    sa.Column('price', sa.String(), nullable=True),
+    sa.Column('ounces', sa.Float(), nullable=True),
+    sa.Column('price', sa.Float(), nullable=True),
     sa.Column('alcType', sa.String(), nullable=True),
     sa.Column('quantity', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
@@ -31,8 +31,8 @@ def upgrade():
     )
     op.create_table('drink',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('price', sa.String(), nullable=True),
-    sa.Column('ounces', sa.String(), nullable=True),
+    sa.Column('price', sa.Float(), nullable=True),
+    sa.Column('ounces', sa.Float(), nullable=True),
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('drinkType', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
@@ -41,24 +41,24 @@ def upgrade():
     )
     op.create_table('employee',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('username', sa.String(), nullable=True),
     sa.Column('password', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('username')
     )
     op.create_table('ticket',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('sum', sa.String(), nullable=True),
-    sa.Column('active', sa.Boolean(), nullable=True),
+    sa.Column('sum', sa.Float(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('receipt_item',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('price', sa.String(), nullable=True),
-    sa.Column('ounces', sa.String(), nullable=True),
+    sa.Column('price', sa.Float(), nullable=True),
+    sa.Column('ounces', sa.Float(), nullable=True),
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('ticket_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),

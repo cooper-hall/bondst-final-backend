@@ -1,4 +1,6 @@
 import os
+# import redis
+from datetime import timedelta
 from flask import Flask, send_file, request, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -12,14 +14,42 @@ from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO, emit
 import sys
 
+ACCESS_EXPIRES = timedelta(hours=12)
 
 app = Flask(__name__, static_folder='public')
 CORS(app, origins=['*'])
 app.config.from_object(Config)
+app.config["JWT_SECRET_KEY"] = 'time2beBONSTin2023foREEEAALLLL'
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = ACCESS_EXPIRES
 jwt = JWTManager(app)
 db.init_app(app)
 migrate = Migrate(app, db)
 socketio = SocketIO(app, cors_allowed_origins='*')
+
+# jwt_redis_blocklist = redis.StrictRedis(
+#     host="localhost", port=6379, db=0, decode_responses=True
+# )
+
+
+# @jwt.token_in_blocklist_loader
+# def check_if_token_is_revoked(jwt_header, jwt_payload: dict):
+#     jti = jwt_payload["jti"]
+#     token_in_redis = jwt_redis_blocklist.get(jti)
+#     return token_in_redis is not None
+
+
+# @app.route("/logout", methods=["DELETE"])
+# @jwt_required()
+# def logout():
+#     jti = get_jwt()["jti"]
+#     jwt_redis_blocklist.set(jti, "", ex=ACCESS_EXPIRES)
+#     return jsonify(msg="Access token revoked")
+
+
+# @app.route("/protected", methods=["GET"])
+# @jwt_required()
+# def protected():
+#     return jsonify(hello="world")
 
 
 @app.get('/')
@@ -102,22 +132,28 @@ def cocktails():
 
 #bottle routes#
 
-# @app.get('/bottles')
-# def bottles():
-#     bottles = Bottle.query.all()
-#     return jsonify([bottle.to_dict() for bottle in bottles])
+@app.get('/bottles')
+def bottles():
+    bottles = Bottle.query.all()
+    return jsonify([bottle.to_dict() for bottle in bottles])
 
+#user routes#
 
-# @app.post('/add_item_to_ticket')
-# def add_item_to_ticket():
-#     data = request.json
-#     item
-#     # get the selected item's info
-#     # create it
-#     # save it to the DB
-#     # return the created item as json to the client
-#     # on the client, update the UI/state, etc
-#     pass
+@app.post('/employee_login')
+@jwt_required()
+def employee_login():
+    data = request.json
+    employee = Employee.query.filter_by(username=data['username']).first()
+    if not employee:
+        return jsonify({'error': 'no user found'}), 404
+    else:
+        given_password = data['password']
+        if employee.password == given_password:
+            # authenticate the employee
+            token = create_access_token(identity=employee.id)
+            return jsonify({'employee': employee.to_dict(), 'token': token})
+        else:
+            return jsonify({'error': 'invalid password'}), 422
 
 
 # @socketio.on('connect')

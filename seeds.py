@@ -1,5 +1,5 @@
 from app import app
-from models import db, Drink, Bottle
+from models import db, Drink, Bottle, Employee
 
 
 def run_seeds():
@@ -24,9 +24,12 @@ def run_seeds():
       bottle7 = Bottle("Tito's Vodka", '2', '5.50', 'Vodka', 10)
       bottle8 = Bottle("Reyka", '2', '8.50', 'Vodka', 10)
       bottle9 = Bottle("Kastra Elion", '2', '10.50', 'Vodka', 10)
+      employee1 = Employee("bradchad", "1111")
+      employee2 = Employee("debra26", "2222")
+      employee3 = Employee("brian43", "3333")
 
       db.session.add_all(
-          [drink1, drink2, drink3, drink4, drink5, drink6, drink7, drink8, drink9, bottle1, bottle2, bottle3, bottle4, bottle5, bottle6, bottle7, bottle8, bottle9])
+          [drink1, drink2, drink3, drink4, drink5, drink6, drink7, drink8, drink9, bottle1, bottle2, bottle3, bottle4, bottle5, bottle6, bottle7, bottle8, bottle9, employee1, employee2, employee3])
       db.session.commit()
       print('Done! :deciduous_tree:')
 
