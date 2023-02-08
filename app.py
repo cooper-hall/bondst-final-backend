@@ -140,7 +140,6 @@ def bottles():
 #user routes#
 
 @app.post('/employee_login')
-@jwt_required()
 def employee_login():
     data = request.json
     employee = Employee.query.filter_by(username=data['username']).first()
@@ -154,6 +153,18 @@ def employee_login():
             return jsonify({'employee': employee.to_dict(), 'token': token})
         else:
             return jsonify({'error': 'invalid password'}), 422
+
+@app.get('/which_employee')
+@jwt_required()
+def which_employee():
+    current_employee = get_jwt_identity
+    employee = Employee.query.get(current_employee)
+    if employee:
+        return jsonify(employee.to_dict()), 200
+    else: 
+        return jsonify({'error': 'you do not work here!'}), 404
+
+
 
 
 # @socketio.on('connect')
