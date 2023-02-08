@@ -16,15 +16,13 @@ class Ticket(db.Model):
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
     
-    def __init__(self, sum, active):
+    def __init__(self, sum):
         self.sum = sum
-        self.active = active
 
     def to_dict(self):
         return{
             'id': self.id,
-            'sum': self.sum,
-            'active': self.active,
+            'sum': self.sum
            }
     
     def receipt_items(self):
