@@ -70,7 +70,7 @@ def tickets():
 @app.post('/ticket')
 def ticket():
     data = request.json 
-    ticket = Ticket(data['sum'], data['active'])
+    ticket = Ticket(data['sum'])
     db.session.add(ticket)
     db.session.commit()
     for item in data['items']:
