@@ -74,7 +74,7 @@ def ticket():
     db.session.add(ticket)
     db.session.commit()
     for item in data['items']:
-        receipt_item = Receipt_Item(ticket.id, item['name'], item['price'])
+        receipt_item = Receipt_Item(ticket.id, item['name'], item['price'], item['ounces'], item['quantity'])
         db.session.add(receipt_item)
         db.session.commit()
     return jsonify([i.to_dict() for i in ticket.receipt_items()]), 201
@@ -109,7 +109,8 @@ def delete_receipt_item(id):
 @app.post('/create_receipt_item')
 def receipt_item():
     data = request.json
-    receipt_item = Receipt_Item(data['price'], data['ounces'], data['name'], data['ticket_id'])
+    receipt_item = Receipt_Item(
+        data['ticket_id'], data['name'], data['price'], data['ounces'], data['quantity'])
     db.session.add(receipt_item)
     db.session.commit()
     return jsonify(receipt_item.to_dict()), 201
@@ -136,6 +137,18 @@ def cocktails():
 def bottles():
     bottles = Bottle.query.all()
     return jsonify([bottle.to_dict() for bottle in bottles])
+
+@app.patch('/update_bottle/<int:id>')
+def update_bottle(id):
+    data = request.json
+    bottle = Bottle.query.get(id)
+    newOunces = bottle.ounces - data['ounces']
+    bottle.ounces = newOunces
+    if newOunces <= 0:
+        bottle.ounces = 24 
+        bottle.quantity -= 1
+    db.session.commit()
+    return jsonify(bottle.to_dict()), 202
 
 #user routes#
 

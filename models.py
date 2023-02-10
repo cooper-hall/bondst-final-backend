@@ -11,7 +11,7 @@ class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sum = db.Column(db.Float)
     # active= db.Column(db.Boolean)
-    receipt_items = db.relationship('Receipt_Item', backref='ticket', lazy=True)
+    # receipt_items = db.relationship('Receipt_Item', backref='ticket', lazy=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
@@ -27,7 +27,13 @@ class Ticket(db.Model):
     
     def receipt_items(self):
         return Receipt_Item.query.filter_by(ticket_id = self.id)
-     
+    
+    def print_ticket(self):
+        ticket = []
+        for item in self.receipt_items():
+            ticket.append({'name': f'{item.name}', 'price': f'{item.price}', 'ounces': f'{item.ounces}', 'quantity': f'{item.quantity}'})
+        return ticket
+
     def __repr__(self):
         return 'Tickets %r' % self.sum
 
@@ -37,22 +43,25 @@ class Receipt_Item(db.Model):
     price = db.Column(db.Float)
     ounces = db.Column(db.Float)
     name = db.Column(db.String)
-    ticket_id = db.Column(db.Integer, db.ForeignKey(
-        'ticket.id'), nullable=True)
+    quantity = db.Column(db.Integer)
+    ticket_id = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, ticket_id, name, price) :
+    def __init__(self, ticket_id, name, price, ounces, quantity) :
         self.ticket_id = ticket_id
         self.name = name
         self.price = price
+        self.ounces = ounces
+        self.quantity = quantity
 
     def to_dict(self):
         return {
             'id': self.id,
             'price': self.price,
             'ounces': self.ounces,
+            'quantity': self.quantity,
             'name': self.name,
             'ticket_id': self.ticket_id
         }
