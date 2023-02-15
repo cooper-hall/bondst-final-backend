@@ -138,6 +138,15 @@ def bottles():
     bottles = Bottle.query.all()
     return jsonify([bottle.to_dict() for bottle in bottles])
 
+@app.get('/bottles/<string:alcType>')
+def bottle(alcType):
+    bottles = Bottle.query.filter_by(alcType=alcType).all()
+    if bottles:
+        return jsonify([bottle.to_dict() for bottle in bottles])
+    else:
+        return {}, 404
+
+
 @app.patch('/update_bottle/<int:id>')
 def update_bottle(id):
     data = request.json
