@@ -185,6 +185,11 @@ def which_employee():
         return jsonify(employee.to_dict()), 200
     else: 
         return jsonify({'error': 'you do not work here!'}), 404
+    
+@app.get('/employees')
+def employees():
+    employees = Employee.query.all()
+    return jsonify([employee.to_dict() for employee in employees])
 
 
 
