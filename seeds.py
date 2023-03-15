@@ -48,9 +48,11 @@ def run_seeds():
       bottle28 = Bottle("Barr Hill Tom Cat", '24', '11.25', 'Gin', 4)
       bottle29 = Bottle("Cotswolds Dry", '24', '10.50', 'Gin', 1)
       bottle30 = Bottle("Purity", '24', '7.50', 'Vodka', 2)
-      employee1 = Employee("bradchad", "1111")
-      employee2 = Employee("debra26", "2222")
-      employee3 = Employee("brian43", "3333")
+      employee1 = Employee("bradchad", "1111", "Brad", "Chad", "bradchad@example.com", '555-555-5555', "1 East Street", 0)
+      employee2 = Employee("debra26", "2222", "Debra", "Young",
+                           "deb@example.com", '555-555-5556', "2 East Street", 0)
+      employee3 = Employee("brian43", "3333", "Brian", "Turn",
+                           "brian@example.com", '333-555-5555', "45 East Street", 1)
       db.session.add_all(
           [drink1, drink2, drink3, drink4, drink5, drink6, drink7, drink8, drink9, drink10, drink11, drink12, bottle1, bottle2, bottle3, bottle4, bottle5, bottle6, bottle7, bottle8, bottle9, bottle10, bottle11, bottle12, bottle13, bottle14, bottle15, bottle16, bottle17, bottle18, bottle19, bottle20, bottle21, bottle22, bottle23, bottle24, bottle25, bottle26, bottle27, bottle28, bottle29, bottle30, employee1, employee2, employee3])
       db.session.commit()
@@ -58,5 +60,6 @@ def run_seeds():
 
 run_seeds()
 
+# python
 
 
