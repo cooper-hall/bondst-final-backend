@@ -139,19 +139,38 @@ class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
     password = db.Column(db.String)
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
+    email = db.Column(db.String, unique=True)
+    phone = db.Column(db.String, unique=True)
+    address = db.Column(db.String)
+    admin = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    def __init__(self, username, password):
+    def __init__(self, username, password,first_name, last_name, email, phone, address, admin):
         self.username = username
         self.password = password
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.phone = phone
+        self.address = address
+        self.admin = admin
+
 
     def to_dict(self):
         return{
             'id': self.id,
             'username': self.username,
-            'password': self.password
+            'password': self.password,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            'phone': self.phone,
+            'address': self.address,
+            'admin': self.admin
         }
     
     def __repr__(self):

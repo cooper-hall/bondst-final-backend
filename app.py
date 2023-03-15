@@ -191,7 +191,14 @@ def employees():
     employees = Employee.query.all()
     return jsonify([employee.to_dict() for employee in employees])
 
-
+@app.post('/new_employee')
+def new_employee():
+    data = request.json
+    new_employee = Employee(
+        data['username'], data['password'], data['first_name'], data['last_name'], data['email'], data['phone'], data['address'], data['admin'])
+    db.session.add(new_employee)
+    db.session.commit()
+    return jsonify(new_employee.to_dict()), 201
 
 # @socketio.on('connect')
 # def connected():
